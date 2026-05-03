@@ -538,6 +538,7 @@ function drawBlock(ctx, x, y, id){
       ctx.fillStyle='#228B22';ctx.fillRect(x+22,y+20,4,28);
       ctx.fillStyle='#32CD32';ctx.fillRect(x+10,y+28,14,6);ctx.fillRect(x+24,y+30,14,6);
       ctx.fillStyle='#FF69B4';
+      // Petals: top-left, top-right, top, bottom-left, bottom-right
       [[-6,-6],[6,-6],[0,-10],[-6,6],[6,6]].forEach(([dx,dy])=>{ctx.beginPath();ctx.arc(x+s/2+dx,y+14+dy,6,0,Math.PI*2);ctx.fill();});
       ctx.fillStyle='#FFD700';ctx.beginPath();ctx.arc(x+s/2,y+14,5,0,Math.PI*2);ctx.fill();
       brd(); break;
@@ -1259,7 +1260,7 @@ function handleCanvasUp(){ isPainting=false; }
 document.addEventListener('keydown',e=>{
   if(e.target.tagName==='TEXTAREA'||e.target.tagName==='INPUT') return;
   if((e.ctrlKey||e.metaKey)&&e.key==='z'){ e.preventDefault(); doUndo(); }
-  if((e.ctrlKey||e.metaKey)&&(e.key==='y'||(e.shiftKey&&e.key==='Z'))){ e.preventDefault(); doRedo(); }
+  if((e.ctrlKey||e.metaKey)&&(e.key==='y'||(e.shiftKey&&e.key.toLowerCase()==='z'))){ e.preventDefault(); doRedo(); }
   if(e.key==='Escape'){ setEraser(false); deselectItem(); }
 });
 
@@ -1301,8 +1302,8 @@ function deselectItem(){
 // SIDEBAR UI
 // ════════════════════════════════════════════
 function buildItemsGrid(category){
-  const grid2=document.getElementById('items-grid');
-  grid2.innerHTML='';
+  const itemsContainer=document.getElementById('items-grid');
+  itemsContainer.innerHTML='';
   const items=ITEMS[category]||[];
   items.forEach(item=>{
     const btn=document.createElement('button');
@@ -1358,7 +1359,7 @@ function buildItemsGrid(category){
       document.getElementById('tooltip').style.display='none';
     });
 
-    grid2.appendChild(btn);
+    itemsContainer.appendChild(btn);
   });
 }
 
@@ -1370,7 +1371,9 @@ function saveAsPNG(){
   render();
   const canvas=document.getElementById('world-canvas');
   const link=document.createElement('a');
-  link.download='mon-monde.png';
+  const now = new Date();
+  const stamp = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  link.download=`mon-monde-${stamp}.png`;
   link.href=canvas.toDataURL('image/png');
   link.click();
 }
