@@ -47,16 +47,16 @@
     .sg.closed .sg-items{display:none}
     .ib{
       display:flex;flex-direction:row;align-items:center;
-      gap:10px;padding:7px 10px;
+      gap:12px;padding:10px 12px;
       background:var(--deep);border:2px solid #0c2a52;border-radius:7px;
       cursor:pointer;transition:transform .1s,border-color .1s,background .1s,box-shadow .1s}
     .ib:hover{background:#1a4a80;transform:translateX(3px)}
     .ib.sel{border-color:var(--gold);background:#1e5a90;box-shadow:0 0 9px rgba(232,184,0,.5)}
-    .ib-ico{font-size:26px;line-height:1;flex-shrink:0;width:32px;text-align:center}
-    .ib-lbl{font-size:10px;color:#ffffff;text-align:left;
+    .ib-ico{font-size:34px;line-height:1;flex-shrink:0;width:40px;text-align:center}
+    .ib-lbl{font-size:14px;color:#ffffff;text-align:left;
       overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
-      text-shadow:0 1px 4px rgba(0,0,0,.9);flex:1}
-    .ib-w{font-size:9px;color:#e8b800;flex-shrink:0;font-weight:bold}
+      text-shadow:0 1px 4px rgba(0,0,0,.9);flex:1;letter-spacing:.3px}
+    .ib-w{font-size:11px;color:#e8b800;flex-shrink:0;font-weight:bold}
 
     /* ── EDITOR ── */
     #ed{flex:1;overflow:auto;padding:14px 14px 52px;
@@ -69,6 +69,7 @@
       display:grid;
       grid-template-columns:repeat(50,var(--cell));
       grid-template-rows:repeat(12,var(--cell));
+      position:relative;
       border:4px solid #0a0a1a;
       box-shadow:0 8px 40px rgba(0,0,0,.65);
       cursor:crosshair;flex-shrink:0}
@@ -178,6 +179,56 @@
       transition:opacity .2s,transform .2s;z-index:900;
       white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.5)}
     #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    /* ── MODE HISTOIRE ── */
+    #btn-story{background:#7c3aed;border-color:#5b21b6;color:#fff;box-shadow:0 4px 0 #3b0764}
+    #btn-story:hover{background:#8b5cf6}
+    #btn-story.active{background:#059669;border-color:#047857;box-shadow:0 4px 0 #064e3b}
+
+    #story-modal{
+      display:none;position:fixed;inset:0;z-index:3000;
+      background:rgba(0,0,0,.82);align-items:center;justify-content:center;}
+    #story-modal.open{display:flex;}
+    #story-box{
+      background:#1a1a2e;border:4px solid #e8b800;border-radius:12px;
+      padding:24px;max-width:640px;width:90%;max-height:85vh;overflow-y:auto;
+      scrollbar-width:thin;scrollbar-color:#e8b800 #0f3460}
+    #story-box h2{color:#e8b800;font-size:12px;margin-bottom:16px;text-align:center;letter-spacing:1px}
+    .story-card{
+      display:flex;align-items:center;gap:12px;
+      background:#0f3460;border:2px solid #1a3a60;border-radius:8px;
+      padding:12px 14px;margin-bottom:8px;cursor:pointer;
+      transition:border-color .15s,background .15s}
+    .story-card:hover{background:#1a4a80;border-color:#e8b800}
+    .story-card .sc-num{font-size:20px;color:#e8b800;flex-shrink:0;width:32px;text-align:center}
+    .story-card .sc-title{font-size:11px;color:#fff;flex:1}
+    .story-card .sc-items{font-size:9px;color:#7898c8;margin-top:4px}
+    #story-close{
+      display:block;margin:16px auto 0;background:#e83c3c;border-color:#b02020;
+      color:#fff;box-shadow:0 4px 0 #701010}
+
+    #story-hud{
+      display:none;background:#0f3460;border-bottom:3px solid #7c3aed;
+      padding:8px 14px;flex-shrink:0;gap:10px;align-items:flex-start;flex-wrap:wrap}
+    #story-hud.visible{display:flex;}
+    #story-hud .sh-title{color:#e8b800;font-size:10px;letter-spacing:1px;flex-shrink:0}
+    #story-hud .sh-text{color:#b0c8e8;font-size:9px;line-height:1.7;flex:1;min-width:200px}
+    #story-items-track{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+    .st-item{
+      display:flex;align-items:center;gap:5px;
+      background:#1a3a60;border:2px solid #2a5090;border-radius:6px;
+      padding:4px 8px;font-size:9px;color:#7898c8;transition:all .2s}
+    .st-item.done{border-color:#22c45a;background:#0a3a20;color:#22c45a}
+    .st-item .st-ico{font-size:16px}
+
+    #win-screen{
+      display:none;position:fixed;inset:0;z-index:4000;
+      background:rgba(0,0,0,.88);align-items:center;justify-content:center;flex-direction:column;gap:20px}
+    #win-screen.open{display:flex;}
+    #win-screen .ws-emoji{font-size:80px;animation:pop .4s cubic-bezier(.36,.07,.19,.97)}
+    #win-screen h2{color:#e8b800;font-size:16px;text-align:center;text-shadow:3px 3px 0 #c88000}
+    #win-screen p{color:#b0c8e8;font-size:9px;text-align:center;line-height:2;max-width:340px}
+    .ws-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
   </style>
 </head>
 <body>
@@ -185,9 +236,18 @@
   <div id="top">
     <h1>✨ JULIEN STORY</h1>
     <div class="hbtns">
+      <button class="btn" id="btn-story">📖 HISTOIRES</button>
       <button class="btn" id="btn-undo" disabled>↩ ANNULER</button>
       <button class="btn danger" id="btn-clear">🗑 EFFACER</button>
     </div>
+  </div>
+  <div id="story-hud">
+    <div style="flex:1">
+      <div class="sh-title" id="sh-title"></div>
+      <div class="sh-text" id="sh-text"></div>
+    </div>
+    <div id="story-items-track"></div>
+    <button class="btn danger" id="btn-quit-story" style="flex-shrink:0;align-self:center">✖ QUITTER</button>
   </div>
   <div id="quicktools">
     <span>OUTILS</span>
@@ -209,8 +269,93 @@
 </div>
 <div id="toast"></div>
 
+<!-- ── MODAL CHOIX HISTOIRE ── -->
+<div id="story-modal">
+  <div id="story-box">
+    <h2>📖 CHOISIS TON HISTOIRE</h2>
+    <div id="story-list"></div>
+    <button class="btn" id="story-close">✖ FERMER</button>
+  </div>
+</div>
+
+<!-- ── ÉCRAN DE VICTOIRE ── -->
+<div id="win-screen">
+  <div class="ws-emoji">🏆</div>
+  <h2>BRAVO ! HISTOIRE TERMINÉE !</h2>
+  <p id="win-text"></p>
+  <div class="ws-btns">
+    <button class="btn" id="win-next">➡ HISTOIRE SUIVANTE</button>
+    <button class="btn" id="win-replay">🔄 REJOUER</button>
+    <button class="btn danger" id="win-free">🎨 MODE LIBRE</button>
+  </div>
+</div>
+
 <script>
 const CELL_PX = 64, COLS = 50, ROWS = 12, MIN_MS = 55;
+
+/* ── HISTOIRES / DÉFIS ── */
+const STORIES = [
+  {
+    id:1, title:'Le Lapin Perdu et le Ruisseau Magique',
+    emoji:'🐰',
+    text:'Le lapin veut rejoindre sa grand-mère, mais le pont est cassé ! Aide-le à traverser le ruisseau en posant tous les bons éléments.',
+    required:['rabbit','broke-bridge','river','rock','branch','house']
+  },
+  {
+    id:2, title:"L'Astronaute et la Fusée en Panne",
+    emoji:'👽',
+    text:"L'alien est à court d'énergie sur une planète sombre. Répare la fusée et reparts dans les étoiles !",
+    required:['alien','breakdown','cloud','gear','crystal','star']
+  },
+  {
+    id:3, title:'Le Pirate et le Trésor de la Tempête',
+    emoji:'🏴‍☠️',
+    text:"Une tempête a tout cassé et le coffre est fermé à clé. Aide le pirate à récupérer son trésor et fêter ça avec ses amis !",
+    required:['pirate','storm','locked-chest','plank','key','chest','friends']
+  },
+  {
+    id:4, title:"Le Dragon et l'Incendie de la Forêt",
+    emoji:'🐉',
+    text:"Un incendie menace la forêt ! Le dragon doit trouver de l'eau et sauver tous les animaux.",
+    required:['castle','dragon','fire','tree','storm','tap-water','friends']
+  },
+  {
+    id:5, title:'Le Pompier Courageux et la Route Bloquée',
+    emoji:'🧑‍🚒',
+    text:"Un arbre bloque la route et il n'y a plus d'eau. Le pompier doit tout dégager et éteindre le feu !",
+    required:['fireman','tree','blocked-road','no-water','plank','tap-water','house']
+  },
+  {
+    id:6, title:'Le Dinosaure Piégé dans le Trou',
+    emoji:'🦕',
+    text:"Le dinosaure est tombé dans un grand trou ! Aide-le à attraper une liane et pousser les rochers pour s'en sortir.",
+    required:['dino','hole','rock','vine','friends']
+  },
+  {
+    id:7, title:'La Voiture Magique dans la Tempête',
+    emoji:'✨',
+    text:"La voiture magique fonce vers la fête mais une tempête et un rocher bloquent la route. Utilise la magie !",
+    required:['tree','storm','rock','magic','plank','friends']
+  },
+  {
+    id:8, title:'Le Requin et le Grand Filet',
+    emoji:'🦈',
+    text:"Le petit requin est coincé dans un filet attaché à des rochers. Ses amis ont un cristal pour le libérer !",
+    required:['sea','shark','net','rock','crystal','friends']
+  },
+  {
+    id:9, title:"La Princesse et l'Arc-en-Ciel Gris",
+    emoji:'👸',
+    text:"Toutes les couleurs ont disparu ! La princesse doit retrouver les cristaux cachés dans les nuages pour faire briller l'arc-en-ciel.",
+    required:['princess','grey-world','cloud','crystal','colors','rainbow']
+  },
+  {
+    id:10, title:"Le Grand Gâteau Magique de l'Enfant",
+    emoji:'🧒',
+    text:"L'enfant veut un gros gâteau pour ses amis mais il manque tout ! Brave la pluie, trouve les ingrédients et prépare la fête.",
+    required:['child','storm','ingredient','magic','tree','gift','friends']
+  }
+];
 
 const W = {
   castle:4, house:4,
@@ -327,7 +472,6 @@ function beep(freq){
 }
 
 /* ── STATE ── */
-let grid=Array.from({length:ROWS},()=>Array(COLS).fill(null));
 let sel=ALL[0],drawing=false,lastKey=null,lastT=0,undoStack=[];
 let mode='draw'; // 'draw' | 'erase' | 'move'
 let movePickup=null;
@@ -377,12 +521,12 @@ gridEl.addEventListener('mouseleave',clearHov);
 const ghost=document.getElementById('ghost');
 function clearHov(){
   document.querySelectorAll('.cell.hov').forEach(c=>c.classList.remove('hov'));
-  ghost.style.display='none';
+  if(!movePickup) ghost.style.display='none';
 }
 function hover(r,c){
   clearHov();
   if(mode==='erase'){cells[r][c].classList.add('hov');return;}
-  if(mode==='move'){cells[r][c].classList.add('hov');return;}
+  if(mode==='move') return; // curseur géré par CSS, pas de hov qui masque les items
   const w=iw(sel.id),h=ih(sel.id);
   for(let dr=0;dr<h&&r+dr<ROWS;dr++)
     for(let dc=0;dc<w&&c+dc<COLS;dc++)
@@ -395,79 +539,83 @@ function hover(r,c){
   ghost.textContent=sel.ico;
 }
 
-/* ── RENDER ── */
-function renderCell(r,c){
-  const el=cells[r][c];
-  el.innerHTML='';el.textContent='';
-  el.classList.remove('occ');el.style.zIndex='';el.style.overflow='';
-  const v=grid[r][c];if(!v)return;
-  if(v.anc){
-    const item=byId(v.id);if(!item)return;
-    const w=v.w,h=v.h;
-    if(w===1&&h===1){
-      el.textContent=item.ico;
-      el.style.fontSize='calc(var(--cell) + 18px)';
-      el.style.lineHeight='1';
-      el.style.overflow='hidden';
-      el.style.paddingBottom='8px';
-    }else{
-      const ew=w*CELL_PX, eh=h*CELL_PX;
-      const fs=Math.round(Math.min(ew*0.72, eh*0.88));
-      const sp=document.createElement('div');
-      sp.className='espan';
-      sp.style.width=ew+'px';
-      sp.style.height=eh+'px';
-      sp.style.fontSize=fs+'px';
-      sp.textContent=item.ico;
-      el.style.overflow='visible';
-      el.style.zIndex='5';
-      el.appendChild(sp);
-    }
-  }else if(v.occ){
-    el.classList.add('occ');
-  }
+/* ── PLACED ITEMS (source of vérité) ── */
+let placed=[]; // [{id,r,c,w,h}] dans l'ordre de pose, le dernier = au-dessus
+
+function itemsAt(r,c){
+  return placed.filter(p=>r>=p.r&&r<p.r+(p.h||1)&&c>=p.c&&c<p.c+(p.w||1));
 }
 
-/* ── PLACE / ERASE ── */
-function dcopy(){return grid.map(row=>row.map(c=>c?Object.assign({},c):null));}
-function saveU(){undoStack.push(dcopy());if(undoStack.length>80)undoStack.shift();document.getElementById('btn-undo').disabled=false;}
-function cleanAt(r,c){
-  const v=grid[r][c];if(!v)return;
-  let ar=r,ac=c;
-  if(v.occ){ar=v.ar;ac=v.ac;}
-  const anch=grid[ar][ac];if(!anch)return;
-  const aw=anch.w||1,ah=anch.h||1;
-  for(let dr=0;dr<ah&&ar+dr<ROWS;dr++)
-    for(let dc=0;dc<aw&&ac+dc<COLS;dc++){grid[ar+dr][ac+dc]=null;renderCell(ar+dr,ac+dc);}
-  updCnt();
+/* ── RENDER ALL ── */
+function renderAll(){
+  for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
+    const el=cells[r][c];
+    el.innerHTML='';el.textContent='';
+    el.removeAttribute('style');el.classList.remove('occ');
+  }
+  gridEl.querySelectorAll('.espan').forEach(e=>e.remove());
+  placed.forEach((p,idx)=>{
+    const itm=byId(p.id);if(!itm)return;
+    const w=p.w||1,h=p.h||1;
+    // Décalage de pile : combien d'items avec exactement le même ancre avant celui-ci
+    const stackIdx=placed.slice(0,idx).filter(x=>x.r===p.r&&x.c===p.c).length;
+    const off=stackIdx*6;
+    if(w===1&&h===1){
+      const el=cells[p.r][p.c];
+      el.style.overflow='hidden';el.style.position='relative';
+      const sp=document.createElement('span');
+      sp.style.cssText='position:absolute;font-size:calc(var(--cell) * 0.75);line-height:1;'+
+        'left:calc(50% + '+off+'px);top:calc(50% + '+off+'px);'+
+        'transform:translate(-50%,-50%);z-index:'+(stackIdx+2)+';'+
+        'display:flex;align-items:center;justify-content:center;'+
+        'filter:drop-shadow(-1px -1px 3px rgba(0,0,0,.7))';
+      sp.textContent=itm.ico;
+      el.appendChild(sp);
+    }else{
+      const ew=w*CELL_PX,eh=h*CELL_PX;
+      const fs=Math.round(Math.min(ew*0.72,eh*0.88));
+      const sp=document.createElement('div');
+      sp.className='espan';
+      sp.style.width=ew+'px';sp.style.height=eh+'px';
+      sp.style.left=(p.c*CELL_PX+off)+'px';
+      sp.style.top=(p.r*CELL_PX+off)+'px';
+      sp.style.fontSize=fs+'px';
+      sp.style.zIndex=String(stackIdx+2);
+      sp.style.filter='drop-shadow(-1px -1px 3px rgba(0,0,0,.7))';
+      sp.textContent=itm.ico;
+      gridEl.appendChild(sp);
+    }
+  });
 }
+
+/* ── UNDO ── */
+function dcopy(){return placed.map(p=>Object.assign({},p));}
+function saveU(){undoStack.push(dcopy());if(undoStack.length>80)undoStack.shift();document.getElementById('btn-undo').disabled=false;}
+
+/* ── PLACE / ERASE ── */
 function eraseAt(r,c){
-  const v=grid[r][c];if(!v)return;
-  let ar=r,ac=c;
-  if(v.occ){ar=v.ar;ac=v.ac;}
-  const anch=grid[ar][ac];if(!anch)return;
-  const aw=anch.w||1,ah=anch.h||1;
-  for(let dr=0;dr<ah&&ar+dr<ROWS;dr++)
-    for(let dc=0;dc<aw&&ac+dc<COLS;dc++){grid[ar+dr][ac+dc]=null;renderCell(ar+dr,ac+dc);}
-  anim(cells[ar][ac],true);updCnt();
+  const covering=itemsAt(r,c);
+  if(!covering.length)return;
+  const top=covering[covering.length-1];
+  placed=placed.filter(p=>p!==top);
+  renderAll();
+  anim(cells[top.r][top.c],true);
+  updCnt();
 }
 function placeAt(r,c){
   const now=Date.now();if(now-lastT<MIN_MS)return;
   if(r<0||r>=ROWS||c<0||c>=COLS)return;
-  if(mode==='erase'){if(grid[r][c]){eraseAt(r,c);lastT=now;}return;}
-  if(mode==='move') return;
+  if(mode==='erase'){if(itemsAt(r,c).length){eraseAt(r,c);lastT=now;}return;}
+  if(mode==='move')return;
   const w=iw(sel.id),h=ih(sel.id);
   if(c+w>COLS||r+h>ROWS)return;
-  const cur=grid[r][c];
-  if(cur&&cur.anc&&cur.id===sel.id&&cur.w===w&&cur.h===h)return;
-  // clean all cells this block will occupy
-  for(let dr=0;dr<h;dr++) for(let dc=0;dc<w;dc++) cleanAt(r+dr,c+dc);
-  grid[r][c]={id:sel.id,w,h,anc:true};
-  for(let dr=0;dr<h;dr++) for(let dc=0;dc<w;dc++){
-    if(dr===0&&dc===0) continue;
-    grid[r+dr][c+dc]={id:sel.id,occ:true,ar:r,ac:c};
-  }
-  for(let dr=0;dr<h;dr++) for(let dc=0;dc<w;dc++) renderCell(r+dr,c+dc);
+  // Max 3 items par ancre exacte (même r,c)
+  const sameAnchor=placed.filter(p=>p.r===r&&p.c===c);
+  if(sameAnchor.length>=3)return;
+  // Skip si le même item est déjà tout en haut à ce même ancre
+  if(sameAnchor.length>0&&sameAnchor[sameAnchor.length-1].id===sel.id)return;
+  placed.push({id:sel.id,r,c,w,h});
+  renderAll();
   anim(cells[r][c],false);
   beep(sel.freq||300);
   lastT=now;updCnt();
@@ -480,30 +628,32 @@ function anim(el,er){
 function pos(e){
   let x,y;
   if(e.touches&&e.touches.length>0){x=e.touches[0].clientX;y=e.touches[0].clientY;}
+  else if(e.changedTouches&&e.changedTouches.length>0){x=e.changedTouches[0].clientX;y=e.changedTouches[0].clientY;}
   else{x=e.clientX;y=e.clientY;}
-  const t=document.elementFromPoint(x,y);
-  return t&&t.dataset&&t.dataset.row!==undefined?{r:+t.dataset.row,c:+t.dataset.col}:null;
+  // Traverser tous les éléments pour passer au-dessus des espans
+  const els=document.elementsFromPoint(x,y);
+  for(const t of els){
+    if(t&&t.dataset&&t.dataset.row!==undefined)
+      return{r:+t.dataset.row,c:+t.dataset.col};
+  }
+  return null;
 }
 
 /* ── MOVE TOOL ── */
 function movePickupAt(r,c){
-  const v=grid[r][c];if(!v)return;
-  let ar=r,ac=c;
-  if(v.occ){ar=v.ar;ac=v.ac;}
-  const anch=grid[ar][ac];if(!anch||!anch.anc)return;
-  movePickup={id:anch.id,w:anch.w,h:anch.h||1,srcR:ar,srcC:ac};
-  const aw=anch.w,ah=anch.h||1;
-  for(let dr=0;dr<ah&&ar+dr<ROWS;dr++)
-    for(let dc=0;dc<aw&&ac+dc<COLS;dc++){grid[ar+dr][ac+dc]=null;renderCell(ar+dr,ac+dc);}
-  updCnt();
-  const item=byId(movePickup.id);
-  if(item){
-    const rect=cells[ar][ac].getBoundingClientRect();
-    const ew=aw*CELL_PX,eh=ah*CELL_PX;
-    const fs=(aw===1&&ah===1)?(CELL_PX+18):Math.round(Math.min(ew*0.72, eh*0.88));
+  const covering=itemsAt(r,c);
+  if(!covering.length)return;
+  const top=covering[covering.length-1];
+  movePickup=Object.assign({},top);
+  // Ne pas retirer de placed : l'item reste visible pendant le drag
+  const itm=byId(top.id);
+  if(itm){
+    const rect=cells[top.r][top.c].getBoundingClientRect();
+    const ew=(top.w||1)*CELL_PX,eh=(top.h||1)*CELL_PX;
+    const fs=((top.w||1)===1&&(top.h||1)===1)?(CELL_PX+18):Math.round(Math.min(ew*0.72,eh*0.88));
     ghost.style.cssText='display:flex;left:'+rect.left+'px;top:'+rect.top+'px;'+
-      'width:'+ew+'px;height:'+eh+'px;font-size:'+fs+'px;line-height:1;opacity:.6;overflow:hidden;';
-    ghost.textContent=item.ico;
+      'width:'+ew+'px;height:'+eh+'px;font-size:'+fs+'px;line-height:1;opacity:.7;overflow:hidden;';
+    ghost.textContent=itm.ico;
   }
   gridEl.classList.add('dragging');
 }
@@ -512,37 +662,33 @@ function moveGhostTo(e){
   let x,y;
   if(e.touches&&e.touches.length>0){x=e.touches[0].clientX;y=e.touches[0].clientY;}
   else{x=e.clientX;y=e.clientY;}
-  const ew=movePickup.w*CELL_PX,eh=(movePickup.h||1)*CELL_PX;
+  const ew=(movePickup.w||1)*CELL_PX,eh=(movePickup.h||1)*CELL_PX;
   ghost.style.left=(x-ew/2)+'px';
   ghost.style.top=(y-eh/2)+'px';
 }
 function moveDropAt(e){
   if(!movePickup)return;
-  let ex=e.clientX,ey=e.clientY;
-  if(e.changedTouches&&e.changedTouches.length){ex=e.changedTouches[0].clientX;ey=e.changedTouches[0].clientY;}
-  const t=document.elementFromPoint(ex,ey);
-  const p=t&&t.dataset&&t.dataset.row!==undefined?{r:+t.dataset.row,c:+t.dataset.col}:null;
-  const item=byId(movePickup.id);
-  const mw=movePickup.w,mh=movePickup.h||1;
-  if(p&&item&&p.c+mw<=COLS&&p.r+mh<=ROWS){
-    const r=p.r,c=p.c;
-    for(let dr=0;dr<mh;dr++) for(let dc=0;dc<mw;dc++) cleanAt(r+dr,c+dc);
-    grid[r][c]={id:item.id,w:mw,h:mh,anc:true};
-    for(let dr=0;dr<mh;dr++) for(let dc=0;dc<mw;dc++){
-      if(dr===0&&dc===0) continue;
-      grid[r+dr][c+dc]={id:item.id,occ:true,ar:r,ac:c};
+  let x,y;
+  if(e.changedTouches&&e.changedTouches.length){x=e.changedTouches[0].clientX;y=e.changedTouches[0].clientY;}
+  else{x=e.clientX;y=e.clientY;}
+  // Traverser pour passer au-dessus des espans
+  const mw=movePickup.w||1,mh=movePickup.h||1;
+  let p=null;
+  const els=document.elementsFromPoint(x,y);
+  for(const t of els){
+    if(t&&t.dataset&&t.dataset.row!==undefined){
+      p={r:+t.dataset.row,c:+t.dataset.col};break;
     }
-    for(let dr=0;dr<mh;dr++) for(let dc=0;dc<mw;dc++) renderCell(r+dr,c+dc);
-    anim(cells[r][c],false);beep(item.freq||300);updCnt();
-  } else if(item){
-    const r=movePickup.srcR,c=movePickup.srcC;
-    grid[r][c]={id:item.id,w:mw,h:mh,anc:true};
-    for(let dr=0;dr<mh;dr++) for(let dc=0;dc<mw;dc++){
-      if(dr===0&&dc===0) continue;
-      grid[r+dr][c+dc]={id:item.id,occ:true,ar:r,ac:c};
-    }
-    for(let dr=0;dr<mh;dr++) for(let dc=0;dc<mw;dc++) renderCell(r+dr,c+dc);updCnt();
   }
+  const dest=(p&&p.c+mw<=COLS&&p.r+mh<=ROWS)?p:{r:movePickup.r,c:movePickup.c};
+  // Retirer la dernière occurrence de l'original, puis poser à la destination
+  const idx=placed.map((x,i)=>x.r===movePickup.r&&x.c===movePickup.c&&x.id===movePickup.id&&(x.w||1)===mw&&(x.h||1)===mh?i:-1).filter(i=>i>=0).pop();
+  if(idx!==undefined)placed.splice(idx,1);
+  placed.push({id:movePickup.id,r:dest.r,c:dest.c,w:mw,h:mh});
+  renderAll();
+  anim(cells[dest.r][dest.c],false);
+  beep(byId(movePickup.id)?.freq||300);
+  updCnt();
   movePickup=null;ghost.style.display='none';
   gridEl.classList.remove('dragging');
 }
@@ -585,8 +731,8 @@ gridEl.addEventListener('touchend',e=>{
 /* ── BUTTONS ── */
 document.getElementById('btn-undo').addEventListener('click',()=>{
   if(!undoStack.length)return;
-  grid=undoStack.pop();
-  for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)renderCell(r,c);
+  placed=undoStack.pop();
+  renderAll();
   updCnt();
   if(!undoStack.length)document.getElementById('btn-undo').disabled=true;
   toast('↩ ANNULÉ !');
@@ -594,15 +740,14 @@ document.getElementById('btn-undo').addEventListener('click',()=>{
 document.getElementById('btn-clear').addEventListener('click',()=>{
   if(!confirm('Effacer tout le niveau ?'))return;
   saveU();
-  grid=Array.from({length:ROWS},()=>Array(COLS).fill(null));
-  for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)renderCell(r,c);
+  placed=[];
+  renderAll();
   updCnt();toast('🗑 EFFACÉ !');
 });
 
 /* ── UI ── */
 function updCnt(){
-  document.getElementById('info-cnt').textContent=
-    grid.flat().filter(v=>v&&v.anc).length;
+  document.getElementById('info-cnt').textContent=placed.length;
 }
 function setMode(m){
   mode=m;
@@ -631,6 +776,103 @@ function toast(msg){
 }
 
 updateInfo();
+
+/* ── MODE HISTOIRE ── */
+let currentStory = null;
+
+const storyList = document.getElementById('story-list');
+STORIES.forEach(s => {
+  const itemLabels = s.required.map(id => { const it=byId(id); return it?it.ico:''; }).join(' ');
+  const card = document.createElement('div');
+  card.className = 'story-card';
+  card.innerHTML = '<div class="sc-num">'+s.emoji+'</div>'+
+    '<div><div class="sc-title">'+s.id+'. '+s.title+'</div>'+
+    '<div class="sc-items">'+itemLabels+'</div></div>';
+  card.addEventListener('click', () => startStory(s));
+  storyList.appendChild(card);
+});
+
+document.getElementById('btn-story').addEventListener('click', () => {
+  document.getElementById('story-modal').classList.add('open');
+});
+document.getElementById('story-close').addEventListener('click', () => {
+  document.getElementById('story-modal').classList.remove('open');
+});
+
+function startStory(s) {
+  document.getElementById('story-modal').classList.remove('open');
+  currentStory = s;
+  placed = []; renderAll(); updCnt();
+  document.getElementById('sh-title').textContent = s.emoji + ' ' + s.title;
+  document.getElementById('sh-text').textContent = s.text;
+  document.getElementById('story-hud').classList.add('visible');
+  document.getElementById('btn-story').classList.add('active');
+  document.getElementById('btn-story').textContent = '📖 ' + s.id + '/10';
+  renderStoryTrack();
+  toast('🎯 DÉFI ' + s.id + ' LANCÉ !');
+}
+
+function renderStoryTrack() {
+  if (!currentStory) return;
+  const track = document.getElementById('story-items-track');
+  track.innerHTML = '';
+  const placedIds = new Set(placed.map(p => p.id));
+  currentStory.required.forEach(id => {
+    const itm = byId(id); if (!itm) return;
+    const done = placedIds.has(id);
+    const div = document.createElement('div');
+    div.className = 'st-item' + (done ? ' done' : '');
+    div.innerHTML = '<span class="st-ico">' + itm.ico + '</span>' + itm.lbl;
+    track.appendChild(div);
+  });
+}
+
+function checkStoryWin() {
+  if (!currentStory) return;
+  const placedIds = new Set(placed.map(p => p.id));
+  const allDone = currentStory.required.every(id => placedIds.has(id));
+  if (allDone) {
+    setTimeout(() => {
+      document.getElementById('win-text').textContent =
+        'Tu as posé tous les éléments de "' + currentStory.title + '" ! 🎉';
+      document.getElementById('win-screen').classList.add('open');
+      beep(880); setTimeout(()=>beep(1100),150); setTimeout(()=>beep(1320),300);
+    }, 400);
+  }
+}
+
+function stopStory() {
+  currentStory = null;
+  document.getElementById('story-hud').classList.remove('visible');
+  document.getElementById('btn-story').classList.remove('active');
+  document.getElementById('btn-story').textContent = '📖 HISTOIRES';
+}
+
+document.getElementById('win-replay').addEventListener('click', () => {
+  document.getElementById('win-screen').classList.remove('open');
+  const s = currentStory; if (s) startStory(s);
+});
+document.getElementById('win-next').addEventListener('click', () => {
+  document.getElementById('win-screen').classList.remove('open');
+  const nextIdx = STORIES.findIndex(s => s === currentStory) + 1;
+  if (nextIdx < STORIES.length) startStory(STORIES[nextIdx]);
+  else { stopStory(); toast('🏆 TOUTES LES HISTOIRES TERMINÉES !'); }
+});
+document.getElementById('win-free').addEventListener('click', () => {
+  document.getElementById('win-screen').classList.remove('open');
+  stopStory(); placed = []; renderAll(); updCnt();
+  toast('🎨 MODE LIBRE !');
+});
+document.getElementById('btn-quit-story').addEventListener('click', () => {
+  stopStory();
+  toast('🎨 MODE LIBRE !');
+});
+
+const _origRenderAll = renderAll;
+renderAll = function() {
+  _origRenderAll();
+  if (currentStory) { renderStoryTrack(); checkStoryWin(); }
+};
 </script>
 </body>
 </html>
