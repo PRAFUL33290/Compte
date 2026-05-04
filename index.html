@@ -43,20 +43,20 @@
     .sg-hdr:hover{background:#1e2d4e}
     .sg-hdr .arr{transition:transform .2s;font-size:14px;line-height:1}
     .sg.closed .sg-hdr .arr{transform:rotate(-90deg)}
-    .sg-items{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:9px}
+    .sg-items{display:flex;flex-direction:column;gap:4px;padding:7px 9px}
     .sg.closed .sg-items{display:none}
     .ib{
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-      gap:8px;padding:12px 6px;min-height:110px;
-      background:var(--deep);border:2px solid #0c2a52;border-radius:8px;
+      display:flex;flex-direction:row;align-items:center;
+      gap:10px;padding:7px 10px;
+      background:var(--deep);border:2px solid #0c2a52;border-radius:7px;
       cursor:pointer;transition:transform .1s,border-color .1s,background .1s,box-shadow .1s}
-    .ib:hover{background:#1a4a80;transform:scale(1.06)}
+    .ib:hover{background:#1a4a80;transform:translateX(3px)}
     .ib.sel{border-color:var(--gold);background:#1e5a90;box-shadow:0 0 9px rgba(232,184,0,.5)}
-    .ib-ico{font-size:46px;line-height:1}
-    .ib-lbl{font-size:13px;color:#ffffff;text-align:center;max-width:110px;
-      overflow:hidden;white-space:normal;word-break:break-word;line-height:1.6;
-      text-shadow:0 1px 4px rgba(0,0,0,.9)}
-    .ib-w{font-size:10px;color:#e8b800;margin-top:2px;font-weight:bold}
+    .ib-ico{font-size:26px;line-height:1;flex-shrink:0;width:32px;text-align:center}
+    .ib-lbl{font-size:10px;color:#ffffff;text-align:left;
+      overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+      text-shadow:0 1px 4px rgba(0,0,0,.9);flex:1}
+    .ib-w{font-size:9px;color:#e8b800;flex-shrink:0;font-weight:bold}
 
     /* ── EDITOR ── */
     #ed{flex:1;overflow:auto;padding:14px 14px 52px;
@@ -92,9 +92,10 @@
 
     /* EMOJI SPAN for multi-cell */
     .espan{
-      position:absolute;top:0;left:0;height:var(--cell);
+      position:absolute;top:0;left:0;
       display:flex;align-items:center;justify-content:center;
-      pointer-events:none;z-index:6;line-height:1}
+      pointer-events:none;z-index:6;line-height:1;
+      overflow:hidden;}
 
     /* Animations */
     @keyframes pop{
@@ -388,9 +389,9 @@ function hover(r,c){
       cells[r+dr][c+dc].classList.add('hov');
   const rect=cells[r][c].getBoundingClientRect();
   const ew=w*CELL_PX, eh=h*CELL_PX;
-  const fs=(w===1&&h===1)?(CELL_PX+18):Math.round(Math.max(ew,eh)*0.5);
+  const fs=(w===1&&h===1)?(CELL_PX+18):Math.round(Math.min(ew*0.72, eh*0.88));
   ghost.style.cssText='display:flex;left:'+rect.left+'px;top:'+rect.top+'px;'+
-    'width:'+ew+'px;height:'+eh+'px;font-size:'+fs+'px;line-height:1;';
+    'width:'+ew+'px;height:'+eh+'px;font-size:'+fs+'px;line-height:1;overflow:hidden;';
   ghost.textContent=sel.ico;
 }
 
@@ -411,7 +412,7 @@ function renderCell(r,c){
       el.style.paddingBottom='8px';
     }else{
       const ew=w*CELL_PX, eh=h*CELL_PX;
-      const fs=Math.round(Math.max(ew,eh)*0.5);
+      const fs=Math.round(Math.min(ew*0.72, eh*0.88));
       const sp=document.createElement('div');
       sp.className='espan';
       sp.style.width=ew+'px';
@@ -499,9 +500,9 @@ function movePickupAt(r,c){
   if(item){
     const rect=cells[ar][ac].getBoundingClientRect();
     const ew=aw*CELL_PX,eh=ah*CELL_PX;
-    const fs=(aw===1&&ah===1)?(CELL_PX+18):Math.round(Math.max(ew,eh)*0.5);
+    const fs=(aw===1&&ah===1)?(CELL_PX+18):Math.round(Math.min(ew*0.72, eh*0.88));
     ghost.style.cssText='display:flex;left:'+rect.left+'px;top:'+rect.top+'px;'+
-      'width:'+ew+'px;height:'+eh+'px;font-size:'+fs+'px;line-height:1;opacity:.6;';
+      'width:'+ew+'px;height:'+eh+'px;font-size:'+fs+'px;line-height:1;opacity:.6;overflow:hidden;';
     ghost.textContent=item.ico;
   }
   gridEl.classList.add('dragging');
